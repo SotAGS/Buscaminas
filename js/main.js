@@ -23,6 +23,9 @@ var nameModal = document.getElementById('name-modal');
 var playerNameInput = document.getElementById('player-name-input');
 var startGameButton = document.getElementById('start-game-button');
 var nameErrorMessage = document.getElementById('name-error-message');
+// Nuevas referencias para la selección de dificultad
+var difficultyRadios = document.getElementsByName('difficulty');
+
 
 // Funciones de inicialización y control del juego
 
@@ -30,9 +33,17 @@ var nameErrorMessage = document.getElementById('name-error-message');
  * Muestra el modal de ingreso de nombre al inicio del juego.
  */
 function showNameModal() {
+    // Estas comprobaciones son defensivas por si el DOM no está completamente cargado o hay un ID incorrecto
+    if (!nameModal) {
+        console.error("Error: El elemento con ID 'name-modal' no se encontró en el DOM. Revisa index.html.");
+        return;
+    }
     nameModal.style.display = 'flex'; // Usar 'flex' para centrar con CSS Flexbox
-    playerNameInput.value = ''; // Limpiar el input
-    nameErrorMessage.textContent = ''; // Limpiar mensaje de error
+    if (playerNameInput) playerNameInput.value = ''; // Limpiar el input
+    if (nameErrorMessage) nameErrorMessage.textContent = ''; // Limpiar mensaje de error
+    // Asegurarse de que el nivel de dificultad fácil esté seleccionado por defecto
+    var easyDifficultyRadio = document.querySelector('input[name="difficulty"][value="easy"]');
+    if (easyDifficultyRadio) easyDifficultyRadio.checked = true;
 }
 
 /**
@@ -41,32 +52,69 @@ function showNameModal() {
  * @returns {boolean} - Verdadero si el nombre es válido, falso en caso contrario.
  */
 function validatePlayerName(name) {
-    // Validar mínimo 3 letras y alfanumérico
+    // Validar mínimo 3 letras y alfanumérico [cite: 22]
     var minLength = 3;
     var alphanumericRegex = /^[a-zA-Z0-9]+$/; // Expresión regular para alfanumérico
 
     if (name.length < minLength) {
-        nameErrorMessage.textContent = 'El nombre debe tener al menos ' + String(minLength) + ' letras.';
+        if (nameErrorMessage) nameErrorMessage.textContent = 'El nombre debe tener al menos ' + String(minLength) + ' letras.';
         return false;
     }
     if (!alphanumericRegex.test(name)) {
-        nameErrorMessage.textContent = 'El nombre solo puede contener caracteres alfanuméricos.';
+        if (nameErrorMessage) nameErrorMessage.textContent = 'El nombre solo puede contener caracteres alfanuméricos.';
         return false;
     }
-    nameErrorMessage.textContent = ''; // Limpiar mensaje de error si es válido
+    if (nameErrorMessage) nameErrorMessage.textContent = ''; // Limpiar mensaje de error si es válido
     return true;
+}
+
+/**
+ * Establece el tamaño del tablero y el número de minas según la dificultad seleccionada. [cite: 53]
+ */
+function setDifficulty() {
+    var selectedDifficulty = 'easy';
+    var i;
+    if (difficultyRadios) {
+        for (i = 0; i < difficultyRadios.length; i++) {
+            if (difficultyRadios[i].checked) {
+                selectedDifficulty = difficultyRadios[i].value;
+                break;
+            }
+        }
+    }
+
+    switch (selectedDifficulty) {
+        case 'easy': // [cite: 54]
+            boardSize = 8;
+            numMines = 10;
+            break;
+        case 'medium': // [cite: 55]
+            boardSize = 12;
+            numMines = 25;
+            break;
+        case 'hard': // [cite: 56]
+            boardSize = 16;
+            numMines = 40;
+            break;
+        default: // Por defecto, fácil
+            boardSize = 8;
+            numMines = 10;
+            break;
+    }
 }
 
 /**
  * Inicializa una nueva partida de Buscaminas.
  */
 function initializeGame() {
-    var inputName = playerNameInput.value;
+    var inputName = playerNameInput ? playerNameInput.value : '';
     if (!validatePlayerName(inputName)) {
         return; // No iniciar el juego si el nombre no es válido
     }
     playerName = inputName;
-    nameModal.style.display = 'none';
+    if (nameModal) nameModal.style.display = 'none';
+
+    setDifficulty(); // Establecer la dificultad antes de crear el tablero
 
     // Restablecer el estado del juego
     gameStarted = false;
@@ -74,20 +122,20 @@ function initializeGame() {
     seconds = 0;
     revealedCellsCount = 0;
     clearInterval(timerInterval);
-    timerDisplay.textContent = '00:00';
-    minesDisplay.textContent = String(numMines);
+    if (timerDisplay) timerDisplay.textContent = '00:00';
+    if (minesDisplay) minesDisplay.textContent = String(numMines);
 
     // Limpiar tablero existente
-    boardContainer.innerHTML = '';
+    if (boardContainer) boardContainer.innerHTML = '';
     board = [];
 
-    // Generar tablero dinámicamente
+    // Generar tablero dinámicamente [cite: 23]
     createBoard(boardSize, boardSize);
-    placeMines(numMines);
+    placeMines(numMines); // [cite: 25]
     calculateNeighborMines();
 
-    // Actualizar el contador de minas visibles
-    minesDisplay.textContent = String(numMines);
+    // Actualizar el contador de minas visibles [cite: 34]
+    if (minesDisplay) minesDisplay.textContent = String(numMines);
 }
 
 /**
@@ -97,7 +145,11 @@ function initializeGame() {
  */
 function createBoard(rows, cols) {
     var i, j;
-    boardContainer.style.width = (cols * 42) + 'px'; // Ajustar ancho del contenedor (40px celda + 2px borde)
+    if (boardContainer) {
+        boardContainer.style.width = (cols * 42) + 'px'; // Ajustar ancho del contenedor (40px celda + 2px borde)
+        boardContainer.style.height = (rows * 42) + 'px'; // Ajustar alto del contenedor
+    }
+
 
     for (i = 0; i < rows; i++) {
         board[i] = [];
@@ -112,10 +164,10 @@ function createBoard(rows, cols) {
             cell.dataset.isFlagged = 'false';
             cell.dataset.neighborMines = '0';
 
-            // Agregar manejadores de eventos usando funciones nombradas
-            cell.addEventListener('click', handleCellClick);
-            cell.addEventListener('contextmenu', handleCellRightClick); // Click derecho
-            boardContainer.appendChild(cell);
+            // Agregar manejadores de eventos usando funciones nombradas [cite: 117]
+            cell.addEventListener('click', handleCellClick); // [cite: 26]
+            cell.addEventListener('contextmenu', handleCellRightClick); // Click derecho [cite: 27]
+            if (boardContainer) boardContainer.appendChild(cell);
 
             board[i][j] = {
                 element: cell,
@@ -129,7 +181,7 @@ function createBoard(rows, cols) {
 }
 
 /**
- * Coloca las minas aleatoriamente en el tablero.
+ * Coloca las minas aleatoriamente en el tablero. [cite: 25]
  * @param {number} count - Número de minas a colocar.
  */
 function placeMines(count) {
@@ -138,7 +190,7 @@ function placeMines(count) {
         var row = Math.floor(Math.random() * boardSize);
         var col = Math.floor(Math.random() * boardSize);
 
-        if (!board[row][col].isMine) {
+        if (board[row] && board[row][col] && !board[row][col].isMine) {
             board[row][col].isMine = true;
             board[row][col].element.dataset.isMine = 'true';
             minesPlaced++;
@@ -147,7 +199,7 @@ function placeMines(count) {
 }
 
 /**
- * Calcula el número de minas vecinas para cada celda no minada.
+ * Calcula el número de minas vecinas para cada celda no minada. [cite: 8]
  */
 function calculateNeighborMines() {
     var i, j, r, c;
@@ -162,7 +214,7 @@ function calculateNeighborMines() {
                         if ((r !== 0 || c !== 0) &&
                             (i + r >= 0 && i + r < boardSize) &&
                             (j + c >= 0 && j + c < boardSize)) {
-                            if (board[i + r][j + c].isMine) {
+                            if (board[i + r] && board[i + r][j + c] && board[i + r][j + c].isMine) {
                                 mineCount++;
                             }
                         }
@@ -176,7 +228,7 @@ function calculateNeighborMines() {
 }
 
 /**
- * Maneja el evento de click izquierdo en una celda.
+ * Maneja el evento de click izquierdo en una celda. [cite: 26]
  * @param {Event} event - El objeto de evento.
  */
 function handleCellClick(event) {
@@ -184,7 +236,7 @@ function handleCellClick(event) {
     var row = parseInt(targetCell.dataset.row, 10);
     var col = parseInt(targetCell.dataset.col, 10);
 
-    // Si el juego no ha comenzado, iniciar el temporizador en el primer click
+    // Si el juego no ha comenzado, iniciar el temporizador en el primer click [cite: 37]
     if (!gameStarted) {
         gameStarted = true;
         startTimer();
@@ -203,7 +255,7 @@ function handleCellClick(event) {
 }
 
 /**
- * Maneja el evento de click derecho en una celda para colocar/quitar bandera.
+ * Maneja el evento de click derecho en una celda para colocar/quitar bandera. [cite: 27]
  * @param {Event} event - El objeto de evento.
  */
 function handleCellRightClick(event) {
@@ -232,7 +284,7 @@ function handleCellRightClick(event) {
 }
 
 /**
- * Revela una celda y ejecuta la expansión si es necesario.
+ * Revela una celda y ejecuta la expansión si es necesario. [cite: 30]
  * @param {number} row - Fila de la celda.
  * @param {number} col - Columna de la celda.
  */
@@ -248,7 +300,7 @@ function revealCell(row, col) {
 
     if (board[row][col].isMine) {
         board[row][col].element.classList.add('mine');
-        endGame(false); // Pierde la partida
+        endGame(false); // Pierde la partida [cite: 28]
         return;
     }
 
@@ -265,7 +317,7 @@ function revealCell(row, col) {
 }
 
 /**
- * Función recursiva para la expansión de celdas vacías.
+ * Función recursiva para la expansión de celdas vacías. [cite: 32]
  * @param {number} row - Fila de la celda.
  * @param {number} col - Columna de la celda.
  */
@@ -298,25 +350,27 @@ function expandEmptyCells(row, col) {
 }
 
 /**
- * Actualiza el contador de minas restantes.
+ * Actualiza el contador de minas restantes. [cite: 34]
  * @param {number} change - El cambio a aplicar al contador (1 para sumar, -1 para restar).
  */
 function updateMineCounter(change) {
-    var currentMines = parseInt(minesDisplay.textContent, 10);
-    currentMines += change;
-    minesDisplay.textContent = String(currentMines);
+    if (minesDisplay) {
+        var currentMines = parseInt(minesDisplay.textContent, 10);
+        currentMines += change;
+        minesDisplay.textContent = String(currentMines);
+    }
 }
 
 /**
- * Inicia el temporizador del juego.
+ * Inicia el temporizador del juego. [cite: 37]
  */
 function startTimer() {
-    timerInterval = setInterval(function updateTimer() { // Función nombrada para el callback
+    timerInterval = setInterval(function updateTimer() { // Función nombrada para el callback [cite: 118]
         seconds++;
         var minutes = Math.floor(seconds / 60);
         var remainingSeconds = seconds % 60;
         var timeString = (minutes < 10 ? '0' : '') + String(minutes) + ':' + (remainingSeconds < 10 ? '0' : '') + String(remainingSeconds);
-        timerDisplay.textContent = timeString;
+        if (timerDisplay) timerDisplay.textContent = timeString;
     }, 1000);
 }
 
@@ -333,14 +387,14 @@ function stopTimer() {
 function checkGameStatus() {
     var totalNonMines = (boardSize * boardSize) - numMines;
 
-    // Si todas las celdas no minadas han sido reveladas, el jugador gana
+    // Si todas las celdas que no contienen minas han sido reveladas, el jugador gana [cite: 29]
     if (revealedCellsCount === totalNonMines) {
         endGame(true); // Ganó
     }
 }
 
 /**
- * Finaliza el juego y muestra un mensaje.
+ * Finaliza el juego y muestra un mensaje. [cite: 39]
  * @param {boolean} didWin - Verdadero si el jugador ganó, falso si perdió.
  */
 function endGame(didWin) {
@@ -348,12 +402,14 @@ function endGame(didWin) {
     stopTimer();
     revealAllMines(); // Revelar todas las minas al final del juego
 
-    if (didWin) {
-        modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
-    } else {
-        modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
+    if (modalMessage) {
+        if (didWin) {
+            modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
+        } else {
+            modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
+        }
     }
-    gameModal.style.display = 'flex'; // Mostrar el modal
+    if (gameModal) gameModal.style.display = 'flex'; // Mostrar el modal
 }
 
 /**
@@ -363,10 +419,8 @@ function revealAllMines() {
     var i, j;
     for (i = 0; i < boardSize; i++) {
         for (j = 0; j < boardSize; j++) {
-            if (board[i][j].isMine) {
+            if (board[i] && board[i][j] && board[i][j].isMine) {
                 board[i][j].element.classList.add('mine');
-                // Si la mina no fue marcada con bandera y se perdió, podrías mostrar un ícono de bomba
-                // o cambiar su texto para indicar la mina.
             }
         }
     }
@@ -375,7 +429,7 @@ function revealAllMines() {
 // Manejadores de eventos
 
 /**
- * Callback para el botón de nueva partida.
+ * Callback para el botón de nueva partida. [cite: 40]
  */
 function handleNewGameButtonClick() {
     showNameModal(); // Mostrar modal de nombre al reiniciar
@@ -392,18 +446,19 @@ function handleStartGameButtonClick() {
  * Callback para el botón de cerrar en el modal de fin de juego.
  */
 function handleModalCloseButtonClick() {
-    gameModal.style.display = 'none'; // Ocultar el modal de juego
+    if (gameModal) gameModal.style.display = 'none'; // Ocultar el modal de juego
 }
 
-// Inicialización de eventos al cargar el DOM
-newGameButton.addEventListener('click', handleNewGameButtonClick);
-startGameButton.addEventListener('click', handleStartGameButtonClick);
-modalCloseButton.addEventListener('click', handleModalCloseButtonClick);
+// Inicialización de eventos al cargar el DOM [cite: 117]
+if (newGameButton) newGameButton.addEventListener('click', handleNewGameButtonClick);
+if (startGameButton) startGameButton.addEventListener('click', handleStartGameButtonClick);
+if (modalCloseButton) modalCloseButton.addEventListener('click', handleModalCloseButtonClick);
 
-// Escuchar la barra espaciadora para iniciar un nuevo juego
+// Escuchar la barra espaciadora para iniciar un nuevo juego [cite: 11]
 document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space' && !nameModal.style.display === 'flex' && !gameModal.style.display === 'flex') { // No debería abrirse si ya hay un modal abierto
-        event.preventDefault(); // Evitar scroll
+    // Asegurarse de que no haya modales activos para evitar aperturas duplicadas
+    if (event.code === 'Space' && nameModal && nameModal.style.display === 'none' && gameModal && gameModal.style.display === 'none') {
+        event.preventDefault(); // Evitar scroll de la página con la barra espaciadora
         showNameModal();
     }
 });
