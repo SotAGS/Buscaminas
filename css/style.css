@@ -1,0 +1,171 @@
+/* Reseteo básico o normalize.css iría en css/reset.css */
+
+/* Selectores de Elementos */
+body {
+    font-family: Arial, sans-serif;
+    display: flex; /* Usando Flexbox para el layout principal */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0; /* Color consistente */
+    color: #333;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: #eee;
+}
+
+h1 {
+    font-size: 2.5rem; /* Unidades consistentes */
+    margin-bottom: 20px;
+}
+
+main {
+    display: flex; /* Flexbox para el contenido principal */
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Espaciado entre elementos con Flexbox */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 30px;
+    background-color: #eee;
+    font-size: 0.9rem;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Selectores de Clases */
+.modal {
+    display: flex; /* Por defecto oculto con JS y 'display: none;' en HTML */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.error-message {
+    color: #ff0000;
+    margin-top: 10px;
+}
+
+/* Selectores de ID */
+#game-controls {
+    display: flex; /* Flexbox para los controles del juego */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#mine-counter,
+#timer {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#new-game-button {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#board-container {
+    display: flex; /* Flexbox para contener el tablero generado */
+    flex-wrap: wrap; /* Permite que las celdas se envuelvan */
+    border: 1px solid #ccc;
+}
+
+/* Las celdas del tablero se generarán dinámicamente */
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* Tamaño de celda por defecto, ajustar con JS para diferentes tamaños */
+    height: 40px;
+    border: 1px solid #bbb;
+    background-color: #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.cell.revealed {
+    background-color: #eee;
+    cursor: default;
+}
+
+.cell.mine {
+    background-color: #ff6666;
+    /* Opcional: mostrar un icono de mina */
+}
+
+.cell.flagged {
+    background-color: #ffcc00;
+    /* Opcional: mostrar un icono de bandera */
+}
+
+/* Números de minas vecinas con colores */
+.cell.number-1 { color: blue; }
+.cell.number-2 { color: green; }
+.cell.number-3 { color: red; }
+.cell.number-4 { color: darkblue; }
+.cell.number-5 { color: darkred; }
+.cell.number-6 { color: teal; }
+.cell.number-7 { color: black; }
+.cell.number-8 { color: gray; }
+
+/* Media Queries al final */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .cell {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+}

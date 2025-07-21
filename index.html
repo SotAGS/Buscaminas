@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscaminas UAI</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Buscaminas</h1>
+    </header>
+
+    <main id="game-container">
+        <section id="game-controls">
+            <div id="mine-counter">Minas Restantes: <span id="mines-display">10</span></div>
+            <button id="new-game-button">😊</button>
+            <div id="timer">Tiempo: <span id="timer-display">00:00</span></div>
+        </section>
+
+        <section id="board-container">
+            </section>
+
+        <div id="game-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <p id="modal-message"></p>
+                <button id="modal-close-button">Cerrar</button>
+            </div>
+        </div>
+
+        <div id="name-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <label for="player-name-input">Ingresa tu nombre (mínimo 3 letras):</label>
+                <input type="text" id="player-name-input" minlength="3" required>
+                <button id="start-game-button">Empezar Partida</button>
+                <p id="name-error-message" class="error-message"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <nav>
+            <ul>
+                <li><a href="contact.html">Contacto</a></li>
+                <li><a href="https://github.com/tu_usuario/tu_repositorio_buscaminas" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
