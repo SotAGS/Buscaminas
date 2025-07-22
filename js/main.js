@@ -350,6 +350,8 @@ function endGame(didWin) {
 
     if (didWin) {
         modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
+        //me faltaba esto x eso no se guardaba xd
+        guardarPuntaje(playerName, seconds);
     } else {
         modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
     }
@@ -411,3 +413,67 @@ document.addEventListener('keydown', function(event) {
 
 // Llamada inicial para mostrar el modal de nombre al cargar la página
 showNameModal();
+
+
+
+//SCOREBOARD
+function guardarPuntaje(playerName, seconds) {
+    var jugadorActual = {
+        nombre: playerName,
+        tiempo: seconds
+    };
+
+    //recibe los puntajes existentes del localstorage
+    var scores = JSON.parse(localStorage.getItem('buscaminasScores')) || [];
+
+    scores.push(jugadorActual);
+
+    //ordenar tiempos
+    scores.sort(function(a, b) {
+        return a.tiempo - b.tiempo;
+    });
+
+
+    //guardado de puntos en el localstorage
+    localStorage.setItem('buscaminasScores', JSON.stringify(scores));
+
+    mostrarPuntajes();
+}
+
+
+function mostrarPuntajes() {
+    var scores = JSON.parse(localStorage.getItem('buscaminasScores')) || [];
+    var scoresTableBody = document.getElementById('scores-table').getElementsByTagName('tbody')[0];
+
+    //limpia cualquier fila existente para evitar duplicados
+    scoresTableBody.innerHTML = '';
+
+    if (scores.length === 0) {
+        scoresTableBody.innerHTML = '<tr><td colspan="2">No hay puntajes aún. ¡Sé el primero!</td></tr>';
+        return;
+    }
+
+
+    //desconche barbaro que me paso el gemini pero lo dejo xq esta muy bueno
+    // Itera sobre los puntajes para crear las filas de la tabla
+    for (var i = 0; i < scores.length; i++) {
+        var score = scores[i];
+        var row = scoresTableBody.insertRow();
+        var timeCell = row.insertCell();
+        var nameCell = row.insertCell();
+
+        // Formatea el tiempo (de segundos a MM:SS)
+        var minutes = Math.floor(score.tiempo / 60);
+        var seconds = score.tiempo % 60;
+        // Agrega ceros iniciales si el número es menor a 10
+        var formattedMinutes = (minutes < 10 ? '0' : '') + minutes;
+        var formattedSeconds = (seconds < 10 ? '0' : '') + seconds;
+
+        timeCell.textContent = formattedMinutes + ':' + formattedSeconds;
+        nameCell.textContent = score.nombre;
+    }
+}
+
+
+//carga mostrarpuntajes al cargar pagina
+window.onload = mostrarPuntajes;
