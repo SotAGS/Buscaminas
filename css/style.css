@@ -223,6 +223,10 @@ nav a {
     /* Puedes agregar un emoji o un ícono con ::before o ::after si quieres */
 }
 
+.cell.flagged:hover {
+    background-color: #967800;
+}
+
 /* Números de minas vecinas con colores */
 .cell.number-1 { color: blue; }
 .cell.number-2 { color: green; }
@@ -305,7 +309,6 @@ nav a {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
-
 
 #scores-table {
     width: 100%;
