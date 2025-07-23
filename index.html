@@ -51,6 +51,20 @@
             <div class="modal-content">
                 <label for="player-name-input">Ingresa tu nombre (mínimo 3 letras):</label>
                 <input type="text" id="player-name-input" minlength="3" required>
+
+                <div id="difficulty-selection">
+                    <p>Selecciona la dificultad:</p>
+                    <label>
+                        <input type="radio" name="difficulty" value="easy" checked> Fácil (8x8, 10 minas)
+                    </label>
+                    <label>
+                        <input type="radio" name="difficulty" value="medium"> Medio (12x12, 25 minas)
+                    </label>
+                    <label>
+                        <input type="radio" name="difficulty" value="hard"> Difícil (16x16, 40 minas)
+                    </label>
+                </div>
+
                 <button id="start-game-button">Empezar Partida</button>
                 <p id="name-error-message" class="error-message"></p>
             </div>

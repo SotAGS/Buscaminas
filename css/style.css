@@ -81,6 +81,53 @@ nav a {
     max-width: 400px;
     text-align: center;
     border-radius: 8px;
+    display: flex; /* Para organizar el contenido del modal */
+    flex-direction: column; /* Organizar elementos verticalmente */
+    gap: 15px; /* Espacio entre elementos */
+}
+
+/* ESTILO CLAVE PARA LOS RADIO BUTTONS Y SUS ETIQUETAS */
+#difficulty-selection label {
+    display: flex; /* Asegura que el input y el texto estén en línea */
+    align-items: center; /* Alinea verticalmente el input con el texto */
+    justify-content: flex-start; /* Alinea a la izquierda dentro del label */
+    cursor: pointer; /* Cambia el cursor a una mano para indicar clic */
+    margin-bottom: 5px; /* Espacio entre opciones de dificultad */
+    padding: 5px 0; /* Pequeño padding para hacer la zona de click más fácil */
+}
+
+#difficulty-selection input[type="radio"] {
+    /* Ajustes básicos para el radio button */
+    -webkit-appearance: radio; /* Asegura la apariencia nativa en WebKit */
+    -moz-appearance: radio;    /* Asegura la apariencia nativa en Firefox */
+    appearance: radio;         /* Asegura la apariencia nativa */
+    width: 18px; /* Tamaño un poco más grande para ser más visible */
+    height: 18px; /* Tamaño un poco más grande */
+    margin-right: 8px; /* Espacio entre el círculo y el texto */
+    vertical-align: middle; /* Alinea con el texto */
+    cursor: pointer; /* Cursor de mano también en el círculo */
+}
+
+
+.modal-content input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%; /* Ajuste de ancho */
+    margin: 0 auto; /* Centrar input */
+}
+
+.modal-content button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
 }
 
 .error-message {
@@ -116,7 +163,27 @@ nav a {
     display: flex; /* Flexbox para contener el tablero generado */
     flex-wrap: wrap; /* Permite que las celdas se envuelvan */
     border: 1px solid #ccc;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Sombra interna para darle profundidad */
 }
+
+/* Estilos para la selección de dificultad */
+#difficulty-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Ajustado el gap para mejor espaciado */
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#difficulty-selection p {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center; /* Centrar el título de dificultad */
+}
+
 
 /* Las celdas del tablero se generarán dinámicamente */
 .cell {
@@ -130,11 +197,17 @@ nav a {
     cursor: pointer;
     font-weight: bold;
     font-size: 1.2rem;
+    transition: background-color 0.1s ease;
+}
+
+.cell:hover:not(.revealed) {
+    background-color: #b3b3b3; /* Efecto hover para celdas no reveladas */
 }
 
 .cell.revealed {
     background-color: #eee;
     cursor: default;
+    border-color: #ddd; /* Borde más suave para celdas reveladas */
 }
 
 .cell.mine {
@@ -145,6 +218,7 @@ nav a {
 .cell.flagged {
     background-color: #ffcc00;
     /* Opcional: mostrar un icono de bandera */
+    /* Puedes agregar un emoji o un ícono con ::before o ::after si quieres */
 }
 
 /* Números de minas vecinas con colores */
