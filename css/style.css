@@ -242,8 +242,46 @@ nav a {
         height: 30px;
         font-size: 1rem;
     }
+}
 
-    .modal-content {
-        width: 90%;
-    }
+
+/*SCOREBOARD*/
+
+
+#game-and-scoreboard-wrapper {
+    display: flex; /* Convierte este contenedor en un Flexbox */
+    justify-content: space-between; /* Distribuye el espacio entre el juego y el scoreboard */
+    align-items: flex-start; /* Alinea los elementos al inicio (arriba) */
+    gap: 20px; /* Espacio entre el juego y el scoreboard */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible dentro de 'main' */
+    flex-wrap: wrap; /* Permite que los elementos salten de línea en pantallas pequeñas */
+}
+
+
+#scoreboard-container {
+    flex: 1; /* Permite que el scoreboard ocupe 1 parte del espacio flexible */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    min-width: 200px; /* Asegura que el scoreboard no sea demasiado estrecho */
+    max-width: 300px; /* Opcional: limita el ancho máximo del scoreboard */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil para destacarlo */
+}
+
+#scores-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#scores-table th,
+#scores-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#scores-table th {
+    background-color: #eee;
 }
