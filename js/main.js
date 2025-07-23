@@ -397,7 +397,6 @@ function endGame(didWin) {
     gameOver = true;
     stopTimer();
     revealAllMines();
-
     if (modalMessage) {
         if (didWin) {
             modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
@@ -405,6 +404,7 @@ function endGame(didWin) {
         } else {
             modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
         }
+
     }
     if (gameModal) gameModal.style.display = 'flex';
 }

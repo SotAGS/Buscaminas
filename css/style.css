@@ -248,6 +248,8 @@ nav a {
         height: 30px;
         font-size: 1rem;
     }
+}
+
 
     .modal-content {
         width: 90%;
@@ -268,6 +270,7 @@ nav a {
 
 
 /*SCOREBOARD*/
+
 #game-and-scoreboard-wrapper {
     display: flex; /* Convierte este contenedor en un Flexbox */
     justify-content: space-between; /* Distribuye el espacio entre el juego y el scoreboard */
@@ -276,6 +279,7 @@ nav a {
     width: 100%; /* Asegura que ocupe todo el ancho disponible dentro de 'main' */
     flex-wrap: wrap; /* Permite que los elementos salten de línea en pantallas pequeñas */
 }
+
 
 /* Contenedor del juego para que tome ancho adecuado dentro del wrapper */
 #game-content {
@@ -297,6 +301,7 @@ nav a {
     max-width: 300px; /* Opcional: limita el ancho máximo del scoreboard */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil para destacarlo */
 }
+
 
 /* Estilos para la nueva selección de dificultad del scoreboard */
 #scoreboard-difficulty-selection {
