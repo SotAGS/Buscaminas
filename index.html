@@ -13,14 +13,44 @@
     </header>
 
     <main id="game-container">
-        <section id="game-controls">
-            <div id="mine-counter">Minas Restantes: <span id="mines-display">10</span></div>
-            <button id="new-game-button">😊</button>
-            <div id="timer">Tiempo: <span id="timer-display">00:00</span></div>
-        </section>
+        <div id="game-and-scoreboard-wrapper">
+            <section id="game-content">
+                <section id="game-controls">
+                    <div id="mine-counter">Minas Restantes: <span id="mines-display">10</span></div>
+                    <button id="new-game-button">😊</button>
+                    <div id="timer">Tiempo: <span id="timer-display">00:00</span></div>
+                </section>
 
-        <section id="board-container">
+                <section id="board-container">
+                    </section>
             </section>
+
+            <section id="scoreboard-container">
+                <h2>Mejores Tiempos</h2>
+                <div id="scoreboard-difficulty-selection">
+                    <label>
+                        <input type="radio" name="scoreboardDifficulty" value="easy" checked> Fácil
+                    </label>
+                    <label>
+                        <input type="radio" name="scoreboardDifficulty" value="medium"> Medio
+                    </label>
+                    <label>
+                        <input type="radio" name="scoreboardDifficulty" value="hard"> Difícil
+                    </label>
+                </div>
+                <table id="scores-table">
+                    <thead>
+                        <tr>
+                            <th>Tiempo</th>
+                            <th>Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="2">Cargando puntajes...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
 
         <div id="game-modal" class="modal" style="display: none;">
             <div class="modal-content">
