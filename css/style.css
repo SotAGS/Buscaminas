@@ -87,7 +87,8 @@ nav a {
 }
 
 /* ESTILO CLAVE PARA LOS RADIO BUTTONS Y SUS ETIQUETAS */
-#difficulty-selection label {
+#difficulty-selection label,
+#scoreboard-difficulty-selection label { /* Aplicar también a la nueva selección de dificultad */
     display: flex; /* Asegura que el input y el texto estén en línea */
     align-items: center; /* Alinea verticalmente el input con el texto */
     justify-content: flex-start; /* Alinea a la izquierda dentro del label */
@@ -96,7 +97,8 @@ nav a {
     padding: 5px 0; /* Pequeño padding para hacer la zona de click más fácil */
 }
 
-#difficulty-selection input[type="radio"] {
+#difficulty-selection input[type="radio"],
+#scoreboard-difficulty-selection input[type="radio"] { /* Aplicar también a la nueva selección de dificultad */
     /* Ajustes básicos para el radio button */
     -webkit-appearance: radio; /* Asegura la apariencia nativa en WebKit */
     -moz-appearance: radio;    /* Asegura la apariencia nativa en Firefox */
@@ -166,7 +168,7 @@ nav a {
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Sombra interna para darle profundidad */
 }
 
-/* Estilos para la selección de dificultad */
+/* Estilos para la selección de dificultad (para el juego) */
 #difficulty-selection {
     display: flex;
     flex-direction: column;
@@ -221,6 +223,10 @@ nav a {
     /* Puedes agregar un emoji o un ícono con ::before o ::after si quieres */
 }
 
+.cell.flagged:hover {
+    background-color: #967800;
+}
+
 /* Números de minas vecinas con colores */
 .cell.number-1 { color: blue; }
 .cell.number-2 { color: green; }
@@ -245,8 +251,25 @@ nav a {
 }
 
 
-/*SCOREBOARD*/
+    .modal-content {
+        width: 90%;
+    }
 
+    /* En pantallas pequeñas, apilar el juego y el scoreboard */
+    #game-and-scoreboard-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #game-content,
+    #scoreboard-container {
+        max-width: 100%; /* Permite que ocupen el 100% del ancho disponible */
+        flex: none; /* Elimina la base de flex para que el width sea el que mande */
+    }
+}
+
+
+/*SCOREBOARD*/
 
 #game-and-scoreboard-wrapper {
     display: flex; /* Convierte este contenedor en un Flexbox */
@@ -255,6 +278,16 @@ nav a {
     gap: 20px; /* Espacio entre el juego y el scoreboard */
     width: 100%; /* Asegura que ocupe todo el ancho disponible dentro de 'main' */
     flex-wrap: wrap; /* Permite que los elementos salten de línea en pantallas pequeñas */
+}
+
+
+/* Contenedor del juego para que tome ancho adecuado dentro del wrapper */
+#game-content {
+    flex: 2; /* Permite que el contenido del juego ocupe 2 partes del espacio flexible */
+    display: flex; /* Lo convierte en flex para que sus hijos también se organicen */
+    flex-direction: column; /* Organiza los controles y el tablero verticalmente */
+    align-items: center; /* Centra los elementos */
+    min-width: 300px; /* Un ancho mínimo para evitar que se comprima demasiado */
 }
 
 
@@ -267,6 +300,19 @@ nav a {
     min-width: 200px; /* Asegura que el scoreboard no sea demasiado estrecho */
     max-width: 300px; /* Opcional: limita el ancho máximo del scoreboard */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil para destacarlo */
+}
+
+
+/* Estilos para la nueva selección de dificultad del scoreboard */
+#scoreboard-difficulty-selection {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre los radio buttons */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 #scores-table {
