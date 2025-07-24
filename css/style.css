@@ -217,14 +217,8 @@ nav a {
     /* Opcional: mostrar un icono de mina */
 }
 
-.cell.flagged {
-    background-color: #ffcc00;
-    /* Opcional: mostrar un icono de bandera */
-    /* Puedes agregar un emoji o un ícono con ::before o ::after si quieres */
-}
-
-.cell.flagged:hover {
-    background-color: #967800;
+.cell.flagged::before {
+    content: "🚩"
 }
 
 /* Números de minas vecinas con colores */
@@ -266,7 +260,6 @@ nav a {
         max-width: 100%; /* Permite que ocupen el 100% del ancho disponible */
         flex: none; /* Elimina la base de flex para que el width sea el que mande */
     }
-}
 
 
 /*SCOREBOARD*/
