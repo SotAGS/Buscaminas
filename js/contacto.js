@@ -1,4 +1,4 @@
- const form = document.getElementById('contactForm');
+ var form = document.getElementById('contactForm');
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -8,7 +8,8 @@
       var mensaje = encodeURIComponent(document.getElementById('mensaje').value);
 
       var asunto = 'Consulta de '+ nombre;
-      const cuerpo = 'Nombre: ' + nombre + '%0ACorreo: ' + email + '%0A%0AMensaje:%0A' + mensaje;
+      var cuerpo = 'Nombre: ' + nombre + '%0ACorreo: ' + email + '%0A%0AMensaje:%0A' + mensaje;
 
       window.location.href = 'mailto:barbamateo89@gmail.com?subject=' + asunto + 'body=' +cuerpo;
     });
+    
