@@ -21,6 +21,8 @@
     --table-header-bg: #eee;
     --table-border: #ddd;
     --error-color: #ff0000;
+    --board-cols: 8;
+    --board-rows: 8;
 }
 
 /* Modo Oscuro */
@@ -49,7 +51,9 @@ body.dark-mode {
 
 /* Selectores de Elementos */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 400;
+    font-style: normal;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -89,6 +93,9 @@ main {
     border-radius: 8px;
     box-shadow: 0 0 10px var(--shadow-color); 
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
 }
 
 footer {
@@ -235,11 +242,16 @@ nav a:hover {
 }
 
 #board-container {
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid var(--border-color); 
-    box-shadow: inset 0 0 5px var(--shadow-color); 
+    display: grid; 
+    grid-template-columns: repeat(var(--board-cols), 1fr); 
+    grid-template-rows: repeat(var(--board-rows), 1fr); 
+    width: 100%; 
+    max-width: 600px; 
+    aspect-ratio: 1 / 1; 
+    gap: 1px;
+    box-shadow: inset 0 0 5px var(--shadow-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
 /* Estilos para la selección de dificultad (para el juego) */
@@ -267,13 +279,10 @@ nav a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border-color); 
     background-color: var(--cell-unrevealed-bg); 
     cursor: pointer;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: clamp(0.8rem, 3vw, 1.2rem); /* Tamaño de fuente responsivo */
     transition: background-color 0.1s ease, border-color 0.1s ease;
 }
 
@@ -287,8 +296,8 @@ nav a:hover {
     border-color: var(--cell-revealed-border); 
 }
 
-.cell.mine {
-    background-color: #ff6666; 
+.cell.mine::before {
+    content: "💥";
 }
 
 .cell.flagged::before {
@@ -322,11 +331,6 @@ header #dark-mode-toggle {
         font-size: 2rem;
     }
 
-    .cell {
-        width: 30px;
-        height: 30px;
-        font-size: 1rem;
-    }
 
     .modal-content {
         width: 90%;
@@ -357,7 +361,7 @@ header #dark-mode-toggle {
 #game-and-scoreboard-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 20px;
     width: 100%;
     flex-wrap: wrap;
@@ -370,6 +374,7 @@ header #dark-mode-toggle {
     flex-direction: column;
     align-items: center;
     min-width: 300px;
+    box-sizing: border-box;
 }
 
 
@@ -383,6 +388,7 @@ header #dark-mode-toggle {
     max-width: 300px;
     box-shadow: 0 2px 5px var(--shadow-color); 
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
 
@@ -390,6 +396,7 @@ header #dark-mode-toggle {
 #scoreboard-difficulty-selection {
     display: flex;
     justify-content: center;
+    flex-direction: row;
     gap: 15px;
     margin-bottom: 15px;
     padding: 10px;

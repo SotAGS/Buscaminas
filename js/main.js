@@ -106,7 +106,11 @@ function initializeGame() {
     if (timerDisplay) timerDisplay.textContent = '00:00';
     if (minesDisplay) minesDisplay.textContent = String(numMines);
 
-    if (boardContainer) boardContainer.innerHTML = '';
+   if (boardContainer) {
+        boardContainer.innerHTML = '';      
+        boardContainer.style.setProperty('--board-cols', String(boardSize));
+        boardContainer.style.setProperty('--board-rows', String(boardSize));
+    }
     board = [];
 
     createBoard(boardSize, boardSize);
@@ -129,10 +133,6 @@ function initializeGame() {
 
 function createBoard(rows, cols) {
     var i, j;
-    if (boardContainer) {
-        boardContainer.style.width = (cols * 42) + 'px';
-        boardContainer.style.height = (rows * 42) + 'px';
-    }
 
     for (i = 0; i < rows; i++) {
         board[i] = [];
