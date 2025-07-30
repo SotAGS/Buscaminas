@@ -1,6 +1,5 @@
-'use strict'; // Modo estricto de ES5
+'use strict';
 
-// Variables globales declaradas al principio del archivo
 var boardSize = 8;
 var numMines = 10;
 var board = [];
@@ -9,10 +8,9 @@ var gameOver = false;
 var timerInterval;
 var seconds = 0;
 var playerName = '';
-var revealedCellsCount = 0; // Contador de celdas no minadas reveladas
-var currentDifficulty = 'easy'; // Dificultad actual del juego
+var revealedCellsCount = 0;
+var currentDifficulty = 'easy';
 
-// Referencias a elementos del DOM
 var boardContainer = document.getElementById('board-container');
 var newGameButton = document.getElementById('new-game-button');
 var minesDisplay = document.getElementById('mines-display');
@@ -24,19 +22,11 @@ var nameModal = document.getElementById('name-modal');
 var playerNameInput = document.getElementById('player-name-input');
 var startGameButton = document.getElementById('start-game-button');
 var nameErrorMessage = document.getElementById('name-error-message');
-// Referencias para la selección de dificultad del juego
 var gameDifficultyRadios = document.getElementsByName('difficulty');
 
-// Referencia al tbody de la tabla de puntajes
 var scoresTableBody = document.getElementById('scores-table') ? document.getElementById('scores-table').getElementsByTagName('tbody')[0] : null;
-// Referencias para la selección de dificultad del scoreboard
 var scoreboardDifficultyRadios = document.getElementsByName('scoreboardDifficulty');
 
-// Funciones de inicialización y control del juego
-
-/**
- * Muestra el modal de ingreso de nombre al inicio del juego.
- */
 function showNameModal() {
     if (!nameModal) {
         console.error("Error: El elemento con ID 'name-modal' no se encontró en el DOM. Revisa index.html.");
@@ -49,11 +39,6 @@ function showNameModal() {
     if (easyDifficultyRadio) easyDifficultyRadio.checked = true;
 }
 
-/**
- * Valida el nombre del jugador.
- * @param {string} name - El nombre ingresado por el jugador.
- * @returns {boolean} - Verdadero si el nombre es válido, falso en caso contrario.
- */
 function validatePlayerName(name) {
     var minLength = 3;
     var alphanumericRegex = /^[a-zA-Z0-9]+$/;
@@ -70,9 +55,6 @@ function validatePlayerName(name) {
     return true;
 }
 
-/**
- * Establece el tamaño del tablero y el número de minas según la dificultad seleccionada para el JUEGO.
- */
 function setGameDifficulty() {
     var selectedDifficulty = 'easy';
     var i;
@@ -84,7 +66,7 @@ function setGameDifficulty() {
             }
         }
     }
-    currentDifficulty = selectedDifficulty; // Actualizar la dificultad global del juego
+    currentDifficulty = selectedDifficulty;
 
     switch (currentDifficulty) {
         case 'easy':
@@ -106,9 +88,6 @@ function setGameDifficulty() {
     }
 }
 
-/**
- * Inicializa una nueva partida de Buscaminas.
- */
 function initializeGame() {
     var inputName = playerNameInput ? playerNameInput.value : '';
     if (!validatePlayerName(inputName)) {
@@ -117,7 +96,7 @@ function initializeGame() {
     playerName = inputName;
     if (nameModal) nameModal.style.display = 'none';
 
-    setGameDifficulty(); // Establecer la dificultad del juego
+    setGameDifficulty();
 
     gameStarted = false;
     gameOver = false;
@@ -136,7 +115,6 @@ function initializeGame() {
 
     if (minesDisplay) minesDisplay.textContent = String(numMines);
 
-    // Al iniciar un nuevo juego, asegurarse de que el scoreboard muestre la dificultad del juego
     var i;
     if (scoreboardDifficultyRadios) {
         for (i = 0; i < scoreboardDifficultyRadios.length; i++) {
@@ -146,14 +124,9 @@ function initializeGame() {
             }
         }
     }
-    mostrarPuntajes(currentDifficulty); // Mostrar el scoreboard de la dificultad actual
+    mostrarPuntajes(currentDifficulty);
 }
 
-/**
- * Crea la estructura del tablero HTML y la matriz de datos.
- * @param {number} rows - Número de filas.
- * @param {number} cols - Número de columnas.
- */
 function createBoard(rows, cols) {
     var i, j;
     if (boardContainer) {
@@ -188,10 +161,6 @@ function createBoard(rows, cols) {
     }
 }
 
-/**
- * Coloca las minas aleatoriamente en el tablero.
- * @param {number} count - Número de minas a colocar.
- */
 function placeMines(count) {
     var minesPlaced = 0;
     while (minesPlaced < count) {
@@ -206,9 +175,6 @@ function placeMines(count) {
     }
 }
 
-/**
- * Calcula el número de minas vecinas para cada celda no minada.
- */
 function calculateNeighborMines() {
     var i, j, r, c;
     for (i = 0; i < boardSize; i++) {
@@ -233,10 +199,6 @@ function calculateNeighborMines() {
     }
 }
 
-/**
- * Maneja el evento de click izquierdo en una celda.
- * @param {Event} event - El objeto de evento.
- */
 function handleCellClick(event) {
     var targetCell = event.target;
     var row = parseInt(targetCell.dataset.row, 10);
@@ -256,10 +218,6 @@ function handleCellClick(event) {
     checkGameStatus();
 }
 
-/**
- * Maneja el evento de click derecho en una celda para colocar/quitar bandera.
- * @param {Event} event - El objeto de evento.
- */
 function handleCellRightClick(event) {
     event.preventDefault();
     var targetCell = event.target;
@@ -283,11 +241,6 @@ function handleCellRightClick(event) {
     }
 }
 
-/**
- * Revela una celda y ejecuta la expansión si es necesario.
- * @param {number} row - Fila de la celda.
- * @param {number} col - Columna de la celda.
- */
 function revealCell(row, col) {
     if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || board[row][col].isRevealed || board[row][col].isFlagged) {
         return;
@@ -314,11 +267,6 @@ function revealCell(row, col) {
     }
 }
 
-/**
- * Función recursiva para la expansión de celdas vacías.
- * @param {number} row - Fila de la celda.
- * @param {number} col - Columna de la celda.
- */
 function expandEmptyCells(row, col) {
     var r, c;
     for (r = -1; r <= 1; r++) {
@@ -346,10 +294,6 @@ function expandEmptyCells(row, col) {
     }
 }
 
-/**
- * Actualiza el contador de minas restantes.
- * @param {number} change - El cambio a aplicar al contador (1 para sumar, -1 para restar).
- */
 function updateMineCounter(change) {
     if (minesDisplay) {
         var currentMines = parseInt(minesDisplay.textContent, 10);
@@ -358,9 +302,6 @@ function updateMineCounter(change) {
     }
 }
 
-/**
- * Inicia el temporizador del juego.
- */
 function startTimer() {
     timerInterval = setInterval(function updateTimer() {
         seconds++;
@@ -371,16 +312,10 @@ function startTimer() {
     }, 1000);
 }
 
-/**
- * Detiene el temporizador del juego.
- */
 function stopTimer() {
     clearInterval(timerInterval);
 }
 
-/**
- * Verifica si el juego ha terminado (ganado o perdido).
- */
 function checkGameStatus() {
     var totalNonMines = (boardSize * boardSize) - numMines;
 
@@ -389,10 +324,6 @@ function checkGameStatus() {
     }
 }
 
-/**
- * Finaliza el juego y muestra un mensaje.
- * @param {boolean} didWin - Verdadero si el jugador ganó, falso si perdió.
- */
 function endGame(didWin) {
     gameOver = true;
     stopTimer();
@@ -400,7 +331,7 @@ function endGame(didWin) {
     if (modalMessage) {
         if (didWin) {
             modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
-            guardarPuntaje(playerName, seconds, currentDifficulty); // Guardar puntaje si ganó
+            guardarPuntaje(playerName, seconds, currentDifficulty);
         } else {
             modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
         }
@@ -409,9 +340,6 @@ function endGame(didWin) {
     if (gameModal) gameModal.style.display = 'flex';
 }
 
-/**
- * Revela todas las minas al final del juego (útil para depuración o si se pierde).
- */
 function revealAllMines() {
     var i, j;
     for (i = 0; i < boardSize; i++) {
@@ -423,42 +351,26 @@ function revealAllMines() {
     }
 }
 
-// SCOREBOARD
-
-/**
- * Guarda un puntaje en el localStorage para la dificultad específica.
- * @param {string} playerName - Nombre del jugador.
- * @param {number} seconds - Tiempo en segundos.
- * @param {string} difficulty - Dificultad del juego ('easy', 'medium', 'hard').
- */
 function guardarPuntaje(playerName, seconds, difficulty) {
     var jugadorActual = {
         nombre: playerName,
         tiempo: seconds
     };
 
-    var localStorageKey = 'buscaminasScores_' + difficulty; // Clave única por dificultad
+    var localStorageKey = 'buscaminasScores_' + difficulty;
     var scores = JSON.parse(localStorage.getItem(localStorageKey)) || [];
 
     scores.push(jugadorActual);
 
-    // Ordenar por tiempo de menor a mayor
     scores.sort(function(a, b) {
         return a.tiempo - b.tiempo;
     });
 
-    // Mantener solo los 10 mejores puntajes (opcional, pero buena práctica)
-    // scores = scores.slice(0, 10);
-
     localStorage.setItem(localStorageKey, JSON.stringify(scores));
 
-    mostrarPuntajes(difficulty); // Actualizar el scoreboard después de guardar
+    mostrarPuntajes(difficulty);
 }
 
-/**
- * Muestra los puntajes en la tabla del scoreboard para la dificultad específica.
- * @param {string} difficulty - Dificultad del scoreboard a mostrar ('easy', 'medium', 'hard').
- */
 function mostrarPuntajes(difficulty) {
     if (!scoresTableBody) {
         console.error("Error: El elemento 'scores-table-body' no se encontró en el DOM.");
@@ -468,7 +380,6 @@ function mostrarPuntajes(difficulty) {
     var localStorageKey = 'buscaminasScores_' + difficulty;
     var scores = JSON.parse(localStorage.getItem(localStorageKey)) || [];
 
-    // Limpia cualquier fila existente para evitar duplicados
     scoresTableBody.innerHTML = '';
 
     if (scores.length === 0) {
@@ -479,14 +390,12 @@ function mostrarPuntajes(difficulty) {
         return;
     }
 
-    // Itera sobre los puntajes para crear las filas de la tabla
     for (var i = 0; i < scores.length; i++) {
         var score = scores[i];
         var row = scoresTableBody.insertRow();
         var timeCell = row.insertCell();
         var nameCell = row.insertCell();
 
-        // Formatea el tiempo (de segundos a MM:SS)
         var minutes = Math.floor(score.tiempo / 60);
         var seconds = score.tiempo % 60;
         var formattedMinutes = (minutes < 10 ? '0' : '') + minutes;
@@ -498,44 +407,28 @@ function mostrarPuntajes(difficulty) {
 }
 
 
-// Manejadores de eventos
-
-/**
- * Callback para el botón de nueva partida.
- */
 function handleNewGameButtonClick() {
     showNameModal();
 }
 
-/**
- * Callback para el botón de empezar partida en el modal de nombre.
- */
 function handleStartGameButtonClick() {
     initializeGame();
 }
 
-/**
- * Callback para el botón de cerrar en el modal de fin de juego.
- */
 function handleModalCloseButtonClick() {
     if (gameModal) gameModal.style.display = 'none';
 }
 
-/**
- * Callback para el cambio de radio button de dificultad del scoreboard.
- */
 function handleScoreboardDifficultyChange(event) {
     var selectedScoreboardDifficulty = event.target.value;
     mostrarPuntajes(selectedScoreboardDifficulty);
 }
 
 
-// Inicialización de eventos al cargar el DOM
 if (newGameButton) newGameButton.addEventListener('click', handleNewGameButtonClick);
 if (startGameButton) startGameButton.addEventListener('click', handleStartGameButtonClick);
 if (modalCloseButton) modalCloseButton.addEventListener('click', handleModalCloseButtonClick);
 
-// Añadir event listeners a los radio buttons de dificultad del scoreboard
 var i;
 if (scoreboardDifficultyRadios) {
     for (i = 0; i < scoreboardDifficultyRadios.length; i++) {
@@ -544,7 +437,6 @@ if (scoreboardDifficultyRadios) {
 }
 
 
-// Escuchar la barra espaciadora para iniciar un nuevo juego
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Space' && nameModal && nameModal.style.display === 'none' && gameModal && gameModal.style.display === 'none') {
         event.preventDefault();
@@ -552,7 +444,5 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Llamada inicial para mostrar el modal de nombre al cargar la página
-// y para mostrar los puntajes de la dificultad 'easy' por defecto.
 showNameModal();
-mostrarPuntajes('easy'); // Mostrar el scoreboard fácil al cargar por primera vez
+mostrarPuntajes('easy');
