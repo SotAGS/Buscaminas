@@ -397,7 +397,7 @@ header #dark-mode-toggle {
     display: flex;
     justify-content: center;
     flex-direction: row;
-    gap: 15px;
+    gap: 5px;
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid var(--border-color); 
