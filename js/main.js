@@ -10,6 +10,13 @@ var seconds = 0;
 var playerName = '';
 var revealedCellsCount = 0;
 var currentDifficulty = 'easy';
+var winAudio = new Audio('audio/8-bit-heaven-26287.mp3');
+var cellClickAudio = new Audio('audio/one_beep-99630.mp3');
+var explosionAudio = new Audio('audio/explosion-9-340460.mp3')
+var loseAudio = new Audio('audio/8bit-sound-effect-268717.mp3');
+var placeFlagAudio= new Audio('audio/gameboy-pluck-41265.mp3');
+placeFlagAudio.volume = 0.5;
+var startAudio = new Audio('audio/game-start-6104.mp3');
 
 var boardContainer = document.getElementById('board-container');
 var newGameButton = document.getElementById('new-game-button');
@@ -93,6 +100,16 @@ function initializeGame() {
     if (!validatePlayerName(inputName)) {
         return;
     }
+
+    startAudio.pause();
+    startAudio.currentTime = 0;
+    startAudio.play();
+    winAudio.pause();
+    winAudio.currentTime = 0;
+    loseAudio.pause();
+    loseAudio.currentTime = 0;
+
+
     playerName = inputName;
     if (nameModal) nameModal.style.display = 'none';
 
@@ -204,6 +221,10 @@ function handleCellClick(event) {
     var row = parseInt(targetCell.dataset.row, 10);
     var col = parseInt(targetCell.dataset.col, 10);
 
+    cellClickAudio.pause();
+    cellClickAudio.currentTime = 0;
+    cellClickAudio.play();
+
     if (!gameStarted) {
         gameStarted = true;
         startTimer();
@@ -224,6 +245,10 @@ function handleCellRightClick(event) {
     var row = parseInt(targetCell.dataset.row, 10);
     var col = parseInt(targetCell.dataset.col, 10);
 
+    placeFlagAudio.pause();
+    placeFlagAudio.currentTime = 0;
+    placeFlagAudio.play();
+    
     if (gameOver || board[row][col].isRevealed) {
         return;
     }
@@ -330,9 +355,14 @@ function endGame(didWin) {
     revealAllMines();
     if (modalMessage) {
         if (didWin) {
+            winAudio.play();
             modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
             guardarPuntaje(playerName, seconds, currentDifficulty);
         } else {
+                cellClickAudio.pause();
+                cellClickAudio.currentTime = 0;
+                explosionAudio.play();
+                loseAudio.play();
             modalMessage.textContent = '¡Oh no, ' + playerName + '! Has perdido. ¡Mejor suerte la próxima!';
         }
 
