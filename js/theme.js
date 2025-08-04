@@ -1,3 +1,5 @@
+'use strict';
+
 function toggleDarkMode() {
     var bodyElement = document.body;
     bodyElement.classList.toggle('dark-mode');

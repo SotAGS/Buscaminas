@@ -40,7 +40,6 @@ function showNameModal() {
         return;
     }
     nameModal.style.display = 'flex';
-    if (playerNameInput) playerNameInput.value = '';
     if (nameErrorMessage) nameErrorMessage.textContent = '';
     var easyDifficultyRadio = document.querySelector('input[name="difficulty"][value="easy"]');
     if (easyDifficultyRadio) easyDifficultyRadio.checked = true;
@@ -145,7 +144,7 @@ function initializeGame() {
             }
         }
     }
-    mostrarPuntajes(currentDifficulty);
+    showScores(currentDifficulty);
 }
 
 function createBoard(rows, cols) {
@@ -357,7 +356,7 @@ function endGame(didWin) {
         if (didWin) {
             winAudio.play();
             modalMessage.textContent = '¡Felicidades, ' + playerName + '! ¡Has ganado la partida!';
-            guardarPuntaje(playerName, seconds, currentDifficulty);
+            saveScore(playerName, seconds, currentDifficulty);
         } else {
                 cellClickAudio.pause();
                 cellClickAudio.currentTime = 0;
@@ -381,27 +380,27 @@ function revealAllMines() {
     }
 }
 
-function guardarPuntaje(playerName, seconds, difficulty) {
-    var jugadorActual = {
-        nombre: playerName,
-        tiempo: seconds
+function saveScore(playerName, seconds, difficulty) {
+    var currentPlayer = {
+        name: playerName,
+        time: seconds
     };
 
     var localStorageKey = 'buscaminasScores_' + difficulty;
     var scores = JSON.parse(localStorage.getItem(localStorageKey)) || [];
 
-    scores.push(jugadorActual);
+    scores.push(currentPlayer);
 
     scores.sort(function(a, b) {
-        return a.tiempo - b.tiempo;
+        return a.time - b.time;
     });
 
     localStorage.setItem(localStorageKey, JSON.stringify(scores));
 
-    mostrarPuntajes(difficulty);
+    showScores(difficulty);
 }
 
-function mostrarPuntajes(difficulty) {
+function showScores(difficulty) {
     if (!scoresTableBody) {
         console.error("Error: El elemento 'scores-table-body' no se encontró en el DOM.");
         return;
@@ -426,19 +425,23 @@ function mostrarPuntajes(difficulty) {
         var timeCell = row.insertCell();
         var nameCell = row.insertCell();
 
-        var minutes = Math.floor(score.tiempo / 60);
-        var seconds = score.tiempo % 60;
+        var minutes = Math.floor(score.time / 60);
+        var seconds = score.time % 60;
         var formattedMinutes = (minutes < 10 ? '0' : '') + minutes;
         var formattedSeconds = (seconds < 10 ? '0' : '') + seconds;
 
         timeCell.textContent = formattedMinutes + ':' + formattedSeconds;
-        nameCell.textContent = score.nombre;
+        nameCell.textContent = score.name;
     }
 }
 
 
 function handleNewGameButtonClick() {
-    showNameModal();
+    if (playerName) { // Si ya hay un nombre, inicia un nuevo juego directamente
+        initializeGame();
+    } else { // Si no, muestra el modal para pedirlo
+        showNameModal();
+    }
 }
 
 function handleStartGameButtonClick() {
@@ -451,7 +454,7 @@ function handleModalCloseButtonClick() {
 
 function handleScoreboardDifficultyChange(event) {
     var selectedScoreboardDifficulty = event.target.value;
-    mostrarPuntajes(selectedScoreboardDifficulty);
+    showScores(selectedScoreboardDifficulty);
 }
 
 
@@ -470,7 +473,11 @@ if (scoreboardDifficultyRadios) {
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Space' && nameModal && nameModal.style.display === 'none' && gameModal && gameModal.style.display === 'none') {
         event.preventDefault();
-        showNameModal();
+        if (playerName) { // Si ya hay un nombre, inicia un nuevo juego directamente
+            initializeGame();
+        } else { // Si no, muestra el modal para pedirlo
+            showNameModal();
+        }
     }
 });
 
