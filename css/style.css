@@ -18,6 +18,8 @@
     --cell-unrevealed-hover-bg: #b3b3b3;
     --cell-revealed-bg: #eee;
     --cell-revealed-border: #ddd;
+    --cell-border-unrevealed: #999;
+    --cell-border-revealed: #ddd;
     --table-header-bg: #eee;
     --table-border: #ddd;
     --error-color: #ff0000;
@@ -43,6 +45,8 @@ body.dark-mode {
     --cell-unrevealed-hover-bg: #666;
     --cell-revealed-bg: #444;
     --cell-revealed-border: #555;
+    --cell-border-unrevealed: #333;
+    --cell-border-revealed: #555;
     --table-header-bg: #4a4a4a;
     --table-border: #555;
     --error-color: #ff6666;
@@ -192,7 +196,7 @@ nav a:hover {
 }
 
 .modal-content button,
-#dark-mode-toggle { /* Aplicar también al botón de modo oscuro */
+#dark-mode-toggle {
     background-color: var(--button-bg); 
     color: white;
     padding: 10px 15px;
@@ -241,17 +245,17 @@ nav a:hover {
     transition: color 0.3s ease;
 }
 
+/* CAMBIO: Se reeemplaza GRID por FLEXBOX para el tablero */
 #board-container {
-    display: grid; 
-    grid-template-columns: repeat(var(--board-cols), 1fr); 
-    grid-template-rows: repeat(var(--board-rows), 1fr); 
-    width: 100%; 
-    max-width: 600px; 
-    aspect-ratio: 1 / 1; 
-    gap: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
     box-shadow: inset 0 0 5px var(--shadow-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
+    border: 1px solid var(--text-color);
 }
 
 /* Estilos para la selección de dificultad (para el juego) */
@@ -274,16 +278,22 @@ nav a:hover {
 }
 
 
-/* Las celdas del tablero se generarán dinámicamente */
+/* CAMBIO: Se ajusta el estilo de las celdas para que funcionen con flexbox y tengan borde */
 .cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--cell-unrevealed-bg); 
+    background-color: var(--cell-unrevealed-bg);
     cursor: pointer;
     font-weight: bold;
-    font-size: clamp(0.8rem, 3vw, 1.2rem); /* Tamaño de fuente responsivo */
+    font-size: clamp(0.8rem, 3vw, 1.2rem);
     transition: background-color 0.1s ease, border-color 0.1s ease;
+    
+    border: 1px solid var(--cell-border-unrevealed);
+    
+    width: calc(100% / var(--board-cols));
+    height: calc(100% / var(--board-rows));
+    box-sizing: border-box;
 }
 
 .cell:hover:not(.revealed) {
@@ -291,18 +301,20 @@ nav a:hover {
 }
 
 .cell.revealed {
-    background-color: var(--cell-revealed-bg); 
+    background-color: var(--cell-revealed-bg);
     cursor: default;
-    border-color: var(--cell-revealed-border); 
+    border-color: var(--cell-border-revealed);
 }
 
+/* Nuevos estilos para los iconos */
 .cell.mine::before {
     content: "💥";
 }
 
 .cell.flagged::before {
-    content: "🚩"
+    content: "🚩";
 }
+
 
 /* Números de minas vecinas con colores (estos colores suelen ser fijos por convención) */
 .cell.number-1 { color: blue; }
