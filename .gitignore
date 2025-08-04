@@ -1,0 +1,8 @@
+# Archivos del sistema operativo
+.DS_Store
+
+# Archivos del editor de codigo
+.vscode/
+
+# Ignorar el archivo PDF de requerimientos
+*.pdf
